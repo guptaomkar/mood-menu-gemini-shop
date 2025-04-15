@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Message, ChatState, MoodType, Product } from '@/types/chat';
+import { Message, ChatState, CategoryType, Product } from '@/types/chat';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
-import MoodSelector from './MoodSelector';
+import CategorySelector from './MoodSelector';
 import ProductGrid from './ProductGrid';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
@@ -23,6 +22,7 @@ const ChatBot: React.FC = () => {
     currentInput: '',
     currentQuestion: 'none',
     selectedMood: null,
+    selectedCategory: null,
     favoriteFood: null,
     hasSubmittedDish: false
   });
@@ -30,23 +30,21 @@ const ChatBot: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  // Initialize chat with a welcome message
   useEffect(() => {
     setChatState(prev => ({
       ...prev,
       messages: [
         {
           id: uuidv4(),
-          content: "Hello! How are you feeling today?",
+          content: "Hello! What category are you interested in today?",
           role: 'bot',
           timestamp: new Date()
         }
       ],
-      currentQuestion: 'mood'
+      currentQuestion: 'category'
     }));
   }, []);
   
-  // Scroll to bottom whenever messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatState.messages]);
@@ -74,85 +72,61 @@ const ChatBot: React.FC = () => {
     const { currentInput, currentQuestion } = chatState;
     if (!currentInput.trim()) return;
     
-    // Add user message
     addMessage(currentInput, 'user');
     
-    // Handle user input based on current question
-    if (currentQuestion === 'dish') {
-      handleDishResponse(currentInput);
+    if (currentQuestion === 'product') {
+      handleProductResponse(currentInput);
     } else {
-      // Generic response for other inputs
       setBotResponse("I'm not sure how to respond to that right now.");
     }
   };
   
-  const handleMoodSelection = (mood: MoodType): void => {
+  const handleCategorySelection = (category: CategoryType): void => {
     setChatState(prev => ({
       ...prev,
-      selectedMood: mood
+      selectedCategory: category
     }));
     
-    // Add user message indicating their mood
-    addMessage(`I'm feeling ${mood}`, 'user');
+    addMessage(`I'm interested in ${category}`, 'user');
     
-    // If mood is hungry, ask about favorite food
-    if (mood === 'hungry') {
-      setTimeout(() => {
-        setBotResponse("What are you craving? Tell me your favorite dish!");
-        setChatState(prev => ({ ...prev, currentQuestion: 'dish' }));
-      }, 500);
-    } else {
-      // Handle other moods with generic responses
-      const responses: Record<MoodType, string> = {
-        happy: "That's wonderful! I'm glad to hear you're happy.",
-        sad: "I'm sorry to hear that. Maybe I can recommend something to cheer you up.",
-        energetic: "Great! You have plenty of energy today.",
-        relaxed: "Nice! It's good to feel relaxed.",
-        hungry: "" // This case is handled separately above
-      };
-      
-      setTimeout(() => {
-        setBotResponse(responses[mood] || "Thanks for sharing how you feel!");
-      }, 500);
-    }
+    setTimeout(() => {
+      setBotResponse(`Great! What specific ${category} product are you looking for?`);
+      setChatState(prev => ({ ...prev, currentQuestion: 'product' }));
+    }, 500);
   };
   
-  const handleDishResponse = async (dishName: string): Promise<void> => {
+  const handleProductResponse = async (productName: string): Promise<void> => {
     setChatState(prev => ({
       ...prev,
       isLoading: true,
-      favoriteFood: dishName,
+      favoriteFood: productName,
       currentQuestion: 'none',
       hasSubmittedDish: true
     }));
     
-    setBotResponse(`I'll find the ingredients for ${dishName}. Just a moment...`);
+    setBotResponse(`I'll find recommendations for ${productName}. Just a moment...`);
     
     try {
-      // Get ingredients from Gemini (mock service for now)
-      const ingredients = await getIngredientsFromGemini(dishName);
+      const ingredients = await getIngredientsFromGemini(productName);
       
-      // Convert ingredients to products with placeholder images initially
       const initialProducts = convertIngredientsToProducts(ingredients);
       setProducts(initialProducts);
       
-      // Load real images for ingredients
-      setBotResponse(`For ${dishName}, you'll need: ${ingredients.join(', ')}. I'm finding images for these ingredients...`);
+      setBotResponse(`Here are some ${productName} recommendations...`);
       
-      // Fetch real images in background
       fetchImagesForIngredients(initialProducts)
         .then(updatedProducts => {
           setProducts(updatedProducts);
-          setBotResponse(`Here are all the ingredients you'll need for ${dishName}. You can now add them to your cart!`);
+          setBotResponse(`Here are detailed recommendations for ${productName}!`);
         })
         .catch(error => {
           console.error('Error fetching images:', error);
-          toast.error("Some ingredient images couldn't be loaded");
+          toast.error("Some product images couldn't be loaded");
         });
     } catch (error) {
-      console.error('Error getting ingredients:', error);
-      setBotResponse("I'm having trouble finding ingredients right now. Please try again later.");
-      toast.error("Failed to get ingredients");
+      console.error('Error getting product details:', error);
+      setBotResponse("I'm having trouble finding product details right now. Please try again later.");
+      toast.error("Failed to get product details");
     } finally {
       setChatState(prev => ({ ...prev, isLoading: false }));
     }
@@ -161,11 +135,11 @@ const ChatBot: React.FC = () => {
   const handleResubmit = (): void => {
     setChatState(prev => ({
       ...prev,
-      currentQuestion: 'dish',
+      currentQuestion: 'product',
       hasSubmittedDish: false
     }));
     
-    setBotResponse("What other dish would you like to try? Tell me another favorite dish!");
+    setBotResponse("What other product would you like to try? Tell me another product!");
   };
   
   const setBotResponse = (content: string): void => {
@@ -182,9 +156,9 @@ const ChatBot: React.FC = () => {
             {chatState.messages.map(message => (
               <ChatMessage key={message.id} message={message} />
             ))}
-            {chatState.currentQuestion === 'mood' && (
+            {chatState.currentQuestion === 'category' && (
               <div className="my-4 animate-fade-in">
-                <MoodSelector onSelect={handleMoodSelection} />
+                <CategorySelector onSelect={handleCategorySelection} />
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -196,10 +170,10 @@ const ChatBot: React.FC = () => {
         value={chatState.currentInput}
         onChange={handleInputChange}
         onSend={handleSendMessage}
-        disabled={chatState.isLoading || chatState.currentQuestion === 'mood'}
+        disabled={chatState.isLoading || chatState.currentQuestion === 'category'}
         placeholder={
-          chatState.currentQuestion === 'dish' 
-            ? "Enter your favorite dish..." 
+          chatState.currentQuestion === 'product' 
+            ? "Enter a specific product..." 
             : "Type your message..."
         }
       />
@@ -208,7 +182,7 @@ const ChatBot: React.FC = () => {
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">
-              Ingredients for {chatState.favoriteFood || 'Your Dish'}
+              Recommendations for {chatState.favoriteFood || 'Your Product'}
             </h3>
             
             <Button 
@@ -217,7 +191,7 @@ const ChatBot: React.FC = () => {
               className="gap-2 text-purple-600 border-purple-200 hover:bg-purple-50 hover:text-purple-700"
             >
               <RefreshCw className="h-4 w-4" />
-              Suggest Another Dish
+              Suggest Another Product
             </Button>
           </div>
           

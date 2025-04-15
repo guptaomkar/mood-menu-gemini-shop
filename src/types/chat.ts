@@ -1,7 +1,8 @@
-
 export type MessageRole = 'user' | 'bot' | 'system';
 
 export type MoodType = 'hungry' | 'happy' | 'sad' | 'energetic' | 'relaxed';
+
+export type CategoryType = 'clothes' | 'shoes' | 'mobiles' | 'software';
 
 export interface Message {
   id: string;
@@ -18,6 +19,7 @@ export interface ChatState {
   selectedMood: MoodType | null;
   favoriteFood: string | null;
   hasSubmittedDish: boolean;
+  selectedCategory: CategoryType | null;
 }
 
 export interface Product {

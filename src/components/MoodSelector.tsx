@@ -1,37 +1,36 @@
 
 import React from 'react';
-import { MoodType } from '@/types/chat';
+import { CategoryType } from '@/types/chat';
 import { Button } from '@/components/ui/button';
-import { Coffee, Utensils, Smile, Frown, Zap, Leaf } from 'lucide-react';
+import { Shirt, Headphones, Smartphone, Code } from 'lucide-react';
 
-interface MoodSelectorProps {
-  onSelect: (mood: MoodType) => void;
+interface CategorySelectorProps {
+  onSelect: (category: CategoryType) => void;
 }
 
-const MoodSelector: React.FC<MoodSelectorProps> = ({ onSelect }) => {
-  const moods: { type: MoodType, label: string, icon: React.ReactNode }[] = [
-    { type: 'hungry', label: 'Hungry', icon: <Utensils className="mr-2 h-4 w-4" /> },
-    { type: 'happy', label: 'Happy', icon: <Smile className="mr-2 h-4 w-4" /> },
-    { type: 'sad', label: 'Sad', icon: <Frown className="mr-2 h-4 w-4" /> },
-    { type: 'energetic', label: 'Energetic', icon: <Zap className="mr-2 h-4 w-4" /> },
-    { type: 'relaxed', label: 'Relaxed', icon: <Leaf className="mr-2 h-4 w-4" /> },
+const CategorySelector: React.FC<CategorySelectorProps> = ({ onSelect }) => {
+  const categories: { type: CategoryType, label: string, icon: React.ReactNode }[] = [
+    { type: 'clothes', label: 'Clothes', icon: <Shirt className="mr-2 h-4 w-4" /> },
+    { type: 'shoes', label: 'Shoes', icon: <Headphones className="mr-2 h-4 w-4" /> },
+    { type: 'mobiles', label: 'Mobiles', icon: <Smartphone className="mr-2 h-4 w-4" /> },
+    { type: 'software', label: 'Software', icon: <Code className="mr-2 h-4 w-4" /> },
   ];
 
   return (
     <div className="flex flex-wrap gap-2 justify-center">
-      {moods.map((mood) => (
+      {categories.map((category) => (
         <Button
-          key={mood.type}
+          key={category.type}
           variant="outline"
           className="border-food-teal text-food-dark hover:bg-food-mint hover:text-food-dark"
-          onClick={() => onSelect(mood.type)}
+          onClick={() => onSelect(category.type)}
         >
-          {mood.icon}
-          {mood.label}
+          {category.icon}
+          {category.label}
         </Button>
       ))}
     </div>
   );
 };
 
-export default MoodSelector;
+export default CategorySelector;
