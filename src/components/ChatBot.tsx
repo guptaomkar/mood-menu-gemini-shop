@@ -8,7 +8,11 @@ import MoodSelector from './MoodSelector';
 import ProductGrid from './ProductGrid';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
-import { getIngredientsFromGemini, convertIngredientsToProducts } from '@/services/chatService';
+import { 
+  getIngredientsFromGemini, 
+  convertIngredientsToProducts,
+  fetchImagesForIngredients
+} from '@/services/chatService';
 
 const ChatBot: React.FC = () => {
   const [chatState, setChatState] = useState<ChatState>({
@@ -124,13 +128,23 @@ const ChatBot: React.FC = () => {
       // Get ingredients from Gemini (mock service for now)
       const ingredients = await getIngredientsFromGemini(dishName);
       
-      // Convert ingredients to products
-      const newProducts = convertIngredientsToProducts(ingredients);
-      setProducts(newProducts);
+      // Convert ingredients to products with placeholder images initially
+      const initialProducts = convertIngredientsToProducts(ingredients);
+      setProducts(initialProducts);
       
-      // Respond with ingredient list
-      const ingredientList = ingredients.join(', ');
-      setBotResponse(`For ${dishName}, you'll need: ${ingredientList}. I've listed the products below!`);
+      // Load real images for ingredients
+      setBotResponse(`For ${dishName}, you'll need: ${ingredients.join(', ')}. I'm finding images for these ingredients...`);
+      
+      // Fetch real images in background
+      fetchImagesForIngredients(initialProducts)
+        .then(updatedProducts => {
+          setProducts(updatedProducts);
+          setBotResponse(`Here are all the ingredients you'll need for ${dishName}. You can now add them to your cart!`);
+        })
+        .catch(error => {
+          console.error('Error fetching images:', error);
+          toast.error("Some ingredient images couldn't be loaded");
+        });
     } catch (error) {
       console.error('Error getting ingredients:', error);
       setBotResponse("I'm having trouble finding ingredients right now. Please try again later.");
