@@ -2,7 +2,7 @@ export type MessageRole = 'user' | 'bot' | 'system';
 
 export type MoodType = 'hungry' | 'happy' | 'sad' | 'energetic' | 'relaxed';
 
-export type CategoryType = 'clothes' | 'shoes' | 'mobiles' | 'software';
+export type CategoryType = 'food' | 'clothes' | 'shoes' | 'mobiles' | 'software';
 
 export interface Message {
   id: string;
