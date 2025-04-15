@@ -17,6 +17,7 @@ export interface ChatState {
   currentQuestion: 'mood' | 'dish' | 'none';
   selectedMood: MoodType | null;
   favoriteFood: string | null;
+  hasSubmittedDish: boolean;
 }
 
 export interface Product {

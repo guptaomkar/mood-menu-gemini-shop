@@ -8,6 +8,8 @@ import MoodSelector from './MoodSelector';
 import ProductGrid from './ProductGrid';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 import { 
   getIngredientsFromGemini, 
   convertIngredientsToProducts,
@@ -21,7 +23,8 @@ const ChatBot: React.FC = () => {
     currentInput: '',
     currentQuestion: 'none',
     selectedMood: null,
-    favoriteFood: null
+    favoriteFood: null,
+    hasSubmittedDish: false
   });
   
   const [products, setProducts] = useState<Product[]>([]);
@@ -119,7 +122,8 @@ const ChatBot: React.FC = () => {
       ...prev,
       isLoading: true,
       favoriteFood: dishName,
-      currentQuestion: 'none'
+      currentQuestion: 'none',
+      hasSubmittedDish: true
     }));
     
     setBotResponse(`I'll find the ingredients for ${dishName}. Just a moment...`);
@@ -152,6 +156,16 @@ const ChatBot: React.FC = () => {
     } finally {
       setChatState(prev => ({ ...prev, isLoading: false }));
     }
+  };
+  
+  const handleResubmit = (): void => {
+    setChatState(prev => ({
+      ...prev,
+      currentQuestion: 'dish',
+      hasSubmittedDish: false
+    }));
+    
+    setBotResponse("What other dish would you like to try? Tell me another favorite dish!");
   };
   
   const setBotResponse = (content: string): void => {
@@ -192,10 +206,22 @@ const ChatBot: React.FC = () => {
       
       {products.length > 0 && (
         <div className="mt-8">
-          <ProductGrid 
-            products={products} 
-            title={`Ingredients for ${chatState.favoriteFood || 'Your Dish'}`} 
-          />
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">
+              Ingredients for {chatState.favoriteFood || 'Your Dish'}
+            </h3>
+            
+            <Button 
+              onClick={handleResubmit}
+              variant="outline" 
+              className="gap-2 text-purple-600 border-purple-200 hover:bg-purple-50 hover:text-purple-700"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Suggest Another Dish
+            </Button>
+          </div>
+          
+          <ProductGrid products={products} />
         </div>
       )}
     </div>
