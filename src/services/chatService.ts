@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/chat';
 
 // Simulate API call to Gemini
@@ -86,6 +85,36 @@ export async function getIngredientsFromGemini(dishName: string): Promise<string
     }, 1500); // 1.5 seconds delay to simulate API call
   });
 }
+
+// Update the mock responses to include different categories
+const mockResponses: Record<string, string[]> = {
+  // Food category
+  'pasta': ['Pasta', 'Tomatoes', 'Garlic', 'Olive oil', 'Basil'],
+  'pizza': ['Pizza dough', 'Tomato sauce', 'Mozzarella', 'Toppings'],
+  
+  // Clothes category
+  'shirt': ['Cotton T-Shirt', 'Polo Shirt', 'Dress Shirt', 'Casual Shirt'],
+  'jeans': ['Blue Jeans', 'Black Jeans', 'Skinny Jeans', 'Straight Cut'],
+  
+  // Shoes category
+  'sneakers': ['Running Shoes', 'Casual Sneakers', 'Sport Shoes', 'Walking Shoes'],
+  'boots': ['Leather Boots', 'Work Boots', 'Hiking Boots', 'Fashion Boots'],
+  
+  // Mobiles category
+  'smartphone': ['Latest Phone', 'Mid-range Phone', 'Budget Phone', 'Premium Phone'],
+  'accessories': ['Phone Case', 'Screen Protector', 'Charger', 'Power Bank'],
+  
+  // Software category
+  'apps': ['Productivity Apps', 'Gaming Apps', 'Utility Apps', 'Social Apps'],
+  'games': ['Action Games', 'Strategy Games', 'RPG Games', 'Casual Games'],
+  
+  // Default responses for unknown items in each category
+  'default_food': ['Fresh Ingredients', 'Cooking Utensils', 'Spices', 'Cookware'],
+  'default_clothes': ['Casual Wear', 'Formal Wear', 'Sports Wear', 'Accessories'],
+  'default_shoes': ['Casual Shoes', 'Formal Shoes', 'Sports Shoes', 'Fashion Shoes'],
+  'default_mobiles': ['Smartphones', 'Tablets', 'Accessories', 'Gadgets'],
+  'default_software': ['Applications', 'Games', 'Utilities', 'Tools']
+};
 
 // Convert ingredients to products
 export function convertIngredientsToProducts(ingredients: string[]): Product[] {
@@ -268,4 +297,3 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
     }, 800 + Math.random() * 1200); // Random delay between 800-2000ms to simulate network
   });
 }
-

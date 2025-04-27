@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Message, ChatState, CategoryType, Product } from '@/types/chat';
@@ -85,17 +84,14 @@ const ChatBot: React.FC = () => {
   const handleCategorySelection = (category: CategoryType): void => {
     setChatState(prev => ({
       ...prev,
-      selectedCategory: category
+      selectedCategory: category,
+      currentQuestion: 'product'
     }));
     
     addMessage(`I'm interested in ${category}`, 'user');
     
     setTimeout(() => {
       setBotResponse(`Great! What specific ${category} product are you looking for?`);
-      setChatState(prev => ({
-        ...prev,
-        currentQuestion: 'product'
-      }));
     }, 500);
   };
   
@@ -207,4 +203,3 @@ const ChatBot: React.FC = () => {
 };
 
 export default ChatBot;
-

@@ -1,8 +1,9 @@
+
 export type MessageRole = 'user' | 'bot' | 'system';
 
-export type MoodType = 'hungry' | 'happy' | 'sad' | 'energetic' | 'relaxed';
-
 export type CategoryType = 'food' | 'clothes' | 'shoes' | 'mobiles' | 'software';
+
+export type CurrentQuestion = 'category' | 'product' | 'none';
 
 export interface Message {
   id: string;
@@ -15,7 +16,7 @@ export interface ChatState {
   messages: Message[];
   isLoading: boolean;
   currentInput: string;
-  currentQuestion: 'mood' | 'dish' | 'none';
+  currentQuestion: CurrentQuestion;
   selectedMood: MoodType | null;
   favoriteFood: string | null;
   hasSubmittedDish: boolean;
@@ -31,3 +32,6 @@ export interface Product {
   category: string;
   isImageLoading?: boolean;
 }
+
+export type MoodType = 'hungry' | 'happy' | 'sad' | 'energetic' | 'relaxed';
+
