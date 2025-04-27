@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/chat';
 
 // Simulate API call to Gemini
@@ -250,32 +251,8 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
         'cucumber': 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e',
         'bell pepper': 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83',
         'avocado': 'https://images.unsplash.com/photo-1632660668043-67a9b860ac8a',
-        'herbs': 'https://images.unsplash.com/photo-1620085229799-73082a0f4f50',
-        'cilantro': 'https://images.unsplash.com/photo-1599219114440-80c7944f1c2b',
-        'mint leaves': 'https://images.unsplash.com/photo-1628613779039-7a71f2467be8',
-        'basil': 'https://images.unsplash.com/photo-1600717535275-0b18ede2f7fc',
         
-        // Other categories
-        'cotton t-shirt': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
-        'polo shirt': 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99',
-        'skinny jeans': 'https://images.unsplash.com/photo-1542272604-787c3835535d',
-        'running sneakers': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-        'boots': 'https://images.unsplash.com/photo-1608256246200-95e5b1e8e62c',
-        'iphone': 'https://images.unsplash.com/photo-1556656793-08538906a9f8',
-        'samsung': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c',
-        'adobe photoshop': 'https://images.unsplash.com/photo-1560158218-69ae5166d439',
-        'microsoft 365': 'https://images.unsplash.com/photo-1650003747344-9920aeacac19',
-        
-        // Vegetables and produce
-        'tomatoes': 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924',
-        'tomato': 'https://images.unsplash.com/photo-1606588260160-0c2992a7e7c7',
-        'garlic': 'https://images.unsplash.com/photo-1615477550927-6ec8445abaa6',
-        'onion': 'https://images.unsplash.com/photo-1587049633312-d628ae50a8ae',
-        'onions': 'https://images.unsplash.com/photo-1580201092675-a0a6a6cafbb1',
-        'lettuce': 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1',
-        'cucumber': 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e',
-        'bell pepper': 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83',
-        'avocado': 'https://images.unsplash.com/photo-1632660668043-67a9b860ac8a',
+        // Herbs and spices
         'herbs': 'https://images.unsplash.com/photo-1620085229799-73082a0f4f50',
         'cilantro': 'https://images.unsplash.com/photo-1599219114440-80c7944f1c2b',
         'mint leaves': 'https://images.unsplash.com/photo-1628613779039-7a71f2467be8',
@@ -290,7 +267,7 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
         'ketchup': 'https://images.unsplash.com/photo-1613735788249-b52ea9252ad6',
         'soy sauce': 'https://images.unsplash.com/photo-1589191600874-7697e255b731',
         
-        // Dairy
+        // Dairy products
         'cheese': 'https://images.unsplash.com/photo-1452195100486-9cc805987862',
         'cheese slices': 'https://images.unsplash.com/photo-1618164435735-413d3b066c9a',
         'parmesan cheese': 'https://images.unsplash.com/photo-1634487359989-3e90c9432133',
@@ -311,7 +288,7 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
         'beef steak': 'https://images.unsplash.com/photo-1529694873984-bcf8899d8faa',
         'fish fillets': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2',
         
-        // Bakery
+        // Bakery items
         'bread': 'https://images.unsplash.com/photo-1549931319-a545dcf3bc7c',
         'burger buns': 'https://images.unsplash.com/photo-1600326145359-3a44ca2a8ca39',
         'tortillas': 'https://images.unsplash.com/photo-1616471838591-331b400bcbd1',
@@ -360,7 +337,24 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
         'croutons': 'https://images.unsplash.com/photo-1600326876646-67b5ec152feb',
         'salsa': 'https://images.unsplash.com/photo-1618092388915-b29d156a14a5',
         'guacamole': 'https://images.unsplash.com/photo-1604352809968-3785a2b0da69',
-        'bbq sauce': 'https://images.unsplash.com/photo-1593584785104-98801d22089d'
+        'bbq sauce': 'https://images.unsplash.com/photo-1593584785104-98801d22089d',
+        
+        // Clothing items
+        'cotton t-shirt': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+        'polo shirt': 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99',
+        'skinny jeans': 'https://images.unsplash.com/photo-1542272604-787c3835535d',
+        
+        // Footwear
+        'running sneakers': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
+        'boots': 'https://images.unsplash.com/photo-1608256246200-95e5b1e8e62c',
+        
+        // Electronics
+        'iphone_device': 'https://images.unsplash.com/photo-1556656793-08538906a9f8',
+        'samsung_device': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c',
+        
+        // Software
+        'adobe_photoshop': 'https://images.unsplash.com/photo-1560158218-69ae5166d439',
+        'ms_office': 'https://images.unsplash.com/photo-1650003747344-9920aeacac19'
       };
       
       // Normalize ingredient name for lookup
