@@ -60,10 +60,12 @@ export function useChatState() {
   };
 
   const handleProductResponse = async (productName: string): Promise<void> => {
+    const { selectedCategory } = chatState;
+    
     setChatState(prev => ({
       ...prev,
       isLoading: true,
-      favoriteFood: productName,
+      favoriteFood: productName, // We'll use this field for all product types
       currentQuestion: 'none',
       hasSubmittedDish: true
     }));
@@ -71,9 +73,10 @@ export function useChatState() {
     setBotResponse(`I'll find recommendations for ${productName}. Just a moment...`);
     
     try {
-      const ingredients = await getIngredientsFromGemini(productName);
+      // Pass the category to getIngredientsFromGemini so it can return appropriate items
+      const ingredients = await getIngredientsFromGemini(productName, selectedCategory);
       
-      const initialProducts = convertIngredientsToProducts(ingredients);
+      const initialProducts = convertIngredientsToProducts(ingredients, selectedCategory);
       setProducts(initialProducts);
       
       setBotResponse(`Here are some ${productName} recommendations...`);
@@ -105,8 +108,29 @@ export function useChatState() {
     
     addMessage(`I'm interested in ${category}`, 'user');
     
+    let responseText = "";
+    switch(category) {
+      case 'food':
+        responseText = "Great! What specific food dish are you looking for?";
+        break;
+      case 'clothes':
+        responseText = "Excellent! What type of clothing item are you looking for?";
+        break;
+      case 'shoes':
+        responseText = "Perfect! What style of shoes are you interested in?";
+        break;
+      case 'mobiles':
+        responseText = "Nice choice! What type of mobile device are you interested in?";
+        break;
+      case 'software':
+        responseText = "Great! What kind of software or application are you looking for?";
+        break;
+      default:
+        responseText = `Great! What specific ${category} product are you looking for?`;
+    }
+    
     setTimeout(() => {
-      setBotResponse(`Great! What specific ${category} product are you looking for?`);
+      setBotResponse(responseText);
     }, 500);
   };
 
@@ -117,7 +141,30 @@ export function useChatState() {
       hasSubmittedDish: false
     }));
     
-    setBotResponse("What other product would you like to try? Tell me another product!");
+    const { selectedCategory } = chatState;
+    let promptText = "";
+    
+    switch(selectedCategory) {
+      case 'food':
+        promptText = "What other dish would you like to try? Tell me another food!";
+        break;
+      case 'clothes':
+        promptText = "What other clothing item would you like to see? Tell me another style!";
+        break;
+      case 'shoes':
+        promptText = "What other footwear would you like to check out? Tell me another style!";
+        break;
+      case 'mobiles':
+        promptText = "What other mobile device would you like to explore? Tell me another option!";
+        break;
+      case 'software':
+        promptText = "What other software would you like to discover? Tell me another application!";
+        break;
+      default:
+        promptText = "What other product would you like to try? Tell me another product!";
+    }
+    
+    setBotResponse(promptText);
   };
 
   const handleInputChange = (value: string): void => {

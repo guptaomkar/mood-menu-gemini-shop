@@ -3,26 +3,45 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import ProductGrid from './ProductGrid';
-import { Product } from '@/types/chat';
+import { Product, CategoryType } from '@/types/chat';
 
 interface ProductRecommendationsProps {
   products: Product[];
   favoriteFood: string | null;
+  selectedCategory: CategoryType | null;
   onResubmit: () => void;
 }
 
 const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({ 
   products, 
-  favoriteFood, 
+  favoriteFood,
+  selectedCategory,
   onResubmit 
 }) => {
   if (products.length === 0) return null;
+
+  const getCategoryTitle = (): string => {
+    switch (selectedCategory) {
+      case 'food':
+        return 'Food Recommendations';
+      case 'clothes':
+        return 'Clothing Recommendations';
+      case 'shoes':
+        return 'Footwear Recommendations';
+      case 'mobiles':
+        return 'Mobile Device Recommendations';
+      case 'software':
+        return 'Software Recommendations';
+      default:
+        return 'Product Recommendations';
+    }
+  };
 
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">
-          Recommendations for {favoriteFood || 'Your Product'}
+          {getCategoryTitle()} for {favoriteFood || 'Your Product'}
         </h3>
         
         <Button 

@@ -48,6 +48,7 @@ const ChatBot: React.FC = () => {
         <ProductRecommendations
           products={products}
           favoriteFood={chatState.favoriteFood}
+          selectedCategory={chatState.selectedCategory}
           onResubmit={handleResubmit}
         />
       )}

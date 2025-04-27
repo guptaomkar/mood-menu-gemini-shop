@@ -1,44 +1,38 @@
 import { Product } from '@/types/chat';
 
 // Simulate API call to Gemini
-export async function getIngredientsFromGemini(dishName: string): Promise<string[]> {
-  console.log("Getting ingredients for:", dishName);
+export async function getIngredientsFromGemini(productName: string, category?: string | null): Promise<string[]> {
+  console.log(`Getting ingredients for: ${productName} in category: ${category}`);
   
   // This is a mockup - in a real implementation, you would call the Gemini API
-  // We'll use a timeout to simulate API latency
   return new Promise((resolve) => {
     setTimeout(() => {
-      // Enhanced mock responses with more detailed ingredients for each dish type
-      const mockResponses: Record<string, string[]> = {
-        'pasta': ['Pasta', 'Tomatoes', 'Garlic', 'Olive oil', 'Basil', 'Parmesan cheese', 'Onion', 'Red pepper flakes'],
-        'spaghetti': ['Spaghetti pasta', 'Ground beef', 'Tomato sauce', 'Garlic', 'Onion', 'Italian herbs', 'Parmesan cheese'],
-        'lasagna': ['Lasagna sheets', 'Ground beef', 'Ricotta cheese', 'Mozzarella cheese', 'Tomato sauce', 'Onion', 'Garlic', 'Italian herbs'],
-        'pizza': ['Pizza dough', 'Tomato sauce', 'Mozzarella cheese', 'Olive oil', 'Basil', 'Oregano', 'Toppings of choice'],
-        'burger': ['Ground beef', 'Burger buns', 'Lettuce', 'Tomato', 'Onion', 'Cheese slices', 'Ketchup', 'Mustard', 'Pickles'],
-        'sandwich': ['Bread', 'Cheese', 'Ham/Turkey', 'Lettuce', 'Tomato', 'Mayonnaise', 'Mustard'],
-        'salad': ['Lettuce', 'Cucumber', 'Tomato', 'Bell pepper', 'Avocado', 'Olive oil', 'Vinegar', 'Salt', 'Pepper'],
-        'caesar salad': ['Romaine lettuce', 'Croutons', 'Parmesan cheese', 'Caesar dressing', 'Grilled chicken', 'Black pepper'],
-        'taco': ['Tortillas', 'Ground beef', 'Taco seasoning', 'Lettuce', 'Tomato', 'Cheese', 'Sour cream', 'Salsa'],
-        'burrito': ['Large tortillas', 'Rice', 'Black beans', 'Ground beef/chicken', 'Cheese', 'Salsa', 'Guacamole', 'Sour cream'],
-        'curry': ['Chicken/Vegetables', 'Curry powder/paste', 'Coconut milk', 'Onion', 'Garlic', 'Ginger', 'Rice', 'Cilantro'],
-        'biryani': ['Basmati rice', 'Chicken/Lamb', 'Biryani masala', 'Onions', 'Tomatoes', 'Yogurt', 'Mint leaves', 'Cilantro', 'Saffron'],
-        'stir fry': ['Rice/Noodles', 'Chicken/Beef/Tofu', 'Mixed vegetables', 'Soy sauce', 'Garlic', 'Ginger', 'Sesame oil'],
-        'sushi': ['Sushi rice', 'Nori sheets', 'Fresh fish (salmon/tuna)', 'Cucumber', 'Avocado', 'Rice vinegar', 'Wasabi', 'Soy sauce'],
-        'pancakes': ['Flour', 'Eggs', 'Milk', 'Baking powder', 'Sugar', 'Butter', 'Maple syrup', 'Berries'],
-        'waffles': ['Flour', 'Eggs', 'Milk', 'Baking powder', 'Sugar', 'Butter', 'Vanilla extract', 'Maple syrup'],
-        'ice cream': ['Heavy cream', 'Milk', 'Sugar', 'Egg yolks', 'Vanilla extract', 'Salt'],
-        'cake': ['Flour', 'Sugar', 'Butter', 'Eggs', 'Milk', 'Baking powder', 'Vanilla extract', 'Frosting'],
-        'chocolate cake': ['Flour', 'Cocoa powder', 'Sugar', 'Butter', 'Eggs', 'Milk', 'Baking powder', 'Vanilla extract', 'Chocolate frosting'],
-        'soup': ['Vegetables', 'Chicken/Vegetable broth', 'Onion', 'Garlic', 'Herbs', 'Salt', 'Pepper'],
-        'chicken soup': ['Chicken', 'Chicken broth', 'Carrots', 'Celery', 'Onion', 'Garlic', 'Thyme', 'Salt', 'Pepper', 'Noodles'],
-        'smoothie': ['Bananas', 'Strawberries/Berries', 'Yogurt', 'Milk/Almond milk', 'Honey', 'Ice'],
-        'omelette': ['Eggs', 'Cheese', 'Bell peppers', 'Onion', 'Ham', 'Salt', 'Pepper', 'Butter'],
-        'steak': ['Beef steak', 'Salt', 'Pepper', 'Garlic', 'Butter', 'Rosemary', 'Thyme'],
-        'fried chicken': ['Chicken pieces', 'Flour', 'Eggs', 'Breadcrumbs', 'Paprika', 'Garlic powder', 'Salt', 'Pepper', 'Oil for frying'],
-        'fish': ['Fish fillets', 'Lemon', 'Garlic', 'Butter', 'Herbs', 'Salt', 'Pepper'],
-        'roast chicken': ['Whole chicken', 'Garlic', 'Lemon', 'Herbs', 'Butter', 'Salt', 'Pepper', 'Olive oil'],
-        'bbq': ['Meat (ribs/chicken/brisket)', 'BBQ sauce', 'Spice rub', 'Wood chips', 'Buns', 'Coleslaw']
-      };
+      // Determine which response set to use based on category
+      let responseSet = 'food'; // Default to food category
+      
+      if (category) {
+        responseSet = category;
+      }
+      
+      // Select the appropriate mock response based on category
+      let mockResponses: Record<string, string[]>;
+      
+      switch(responseSet) {
+        case 'clothes':
+          mockResponses = clothesMockResponses;
+          break;
+        case 'shoes':
+          mockResponses = shoesMockResponses;
+          break;
+        case 'mobiles':
+          mockResponses = mobilesMockResponses;
+          break;
+        case 'software':
+          mockResponses = softwareMockResponses;
+          break;
+        default:
+          mockResponses = foodMockResponses;
+      }
       
       // Utility function to get a close match
       const findBestMatch = (input: string, options: string[]): string | null => {
@@ -61,72 +55,127 @@ export async function getIngredientsFromGemini(dishName: string): Promise<string
         return null;
       };
       
-      // Normalize dish name for lookup
-      const lowerDish = dishName.toLowerCase();
+      // Normalize product name for lookup
+      const lowerProduct = productName.toLowerCase();
       
       // Try to find exact match first
-      if (mockResponses[lowerDish]) {
-        resolve(mockResponses[lowerDish]);
+      if (mockResponses[lowerProduct]) {
+        resolve(mockResponses[lowerProduct]);
         return;
       }
       
       // Then try to find the best partial match
-      const matchedDish = findBestMatch(lowerDish, Object.keys(mockResponses));
+      const matchedProduct = findBestMatch(lowerProduct, Object.keys(mockResponses));
       
-      if (matchedDish) {
-        resolve(mockResponses[matchedDish]);
+      if (matchedProduct) {
+        resolve(mockResponses[matchedProduct]);
       } else {
-        // Default ingredients for unknown dishes - make this more generic
-        resolve([
-          'Flour', 'Sugar', 'Salt', 'Olive oil', 'Water', 
-          'Garlic', 'Onion', 'Tomato', 'Spices', 'Herbs'
-        ]);
+        // Default response for unknown products in this category
+        const defaultKey = `default_${responseSet}`;
+        const defaultMockResponses = {
+          default_food: ['Fresh Ingredients', 'Cooking Utensils', 'Spices', 'Cookware'],
+          default_clothes: ['Casual Wear', 'Formal Wear', 'Sports Wear', 'Accessories'],
+          default_shoes: ['Casual Shoes', 'Formal Shoes', 'Sports Shoes', 'Fashion Shoes'],
+          default_mobiles: ['Smartphones', 'Tablets', 'Accessories', 'Gadgets'],
+          default_software: ['Applications', 'Games', 'Utilities', 'Tools']
+        };
+        
+        resolve(defaultMockResponses[defaultKey as keyof typeof defaultMockResponses] || defaultMockResponses.default_food);
       }
     }, 1500); // 1.5 seconds delay to simulate API call
   });
 }
 
-// Update the mock responses to include different categories
-const mockResponses: Record<string, string[]> = {
-  // Food category
-  'pasta': ['Pasta', 'Tomatoes', 'Garlic', 'Olive oil', 'Basil'],
-  'pizza': ['Pizza dough', 'Tomato sauce', 'Mozzarella', 'Toppings'],
-  
-  // Clothes category
-  'shirt': ['Cotton T-Shirt', 'Polo Shirt', 'Dress Shirt', 'Casual Shirt'],
-  'jeans': ['Blue Jeans', 'Black Jeans', 'Skinny Jeans', 'Straight Cut'],
-  
-  // Shoes category
-  'sneakers': ['Running Shoes', 'Casual Sneakers', 'Sport Shoes', 'Walking Shoes'],
-  'boots': ['Leather Boots', 'Work Boots', 'Hiking Boots', 'Fashion Boots'],
-  
-  // Mobiles category
-  'smartphone': ['Latest Phone', 'Mid-range Phone', 'Budget Phone', 'Premium Phone'],
-  'accessories': ['Phone Case', 'Screen Protector', 'Charger', 'Power Bank'],
-  
-  // Software category
-  'apps': ['Productivity Apps', 'Gaming Apps', 'Utility Apps', 'Social Apps'],
-  'games': ['Action Games', 'Strategy Games', 'RPG Games', 'Casual Games'],
-  
-  // Default responses for unknown items in each category
-  'default_food': ['Fresh Ingredients', 'Cooking Utensils', 'Spices', 'Cookware'],
-  'default_clothes': ['Casual Wear', 'Formal Wear', 'Sports Wear', 'Accessories'],
-  'default_shoes': ['Casual Shoes', 'Formal Shoes', 'Sports Shoes', 'Fashion Shoes'],
-  'default_mobiles': ['Smartphones', 'Tablets', 'Accessories', 'Gadgets'],
-  'default_software': ['Applications', 'Games', 'Utilities', 'Tools']
+// Food category mock responses
+const foodMockResponses: Record<string, string[]> = {
+  'pasta': ['Pasta', 'Tomatoes', 'Garlic', 'Olive oil', 'Basil', 'Parmesan cheese', 'Onion', 'Red pepper flakes'],
+  'spaghetti': ['Spaghetti pasta', 'Ground beef', 'Tomato sauce', 'Garlic', 'Onion', 'Italian herbs', 'Parmesan cheese'],
+  'lasagna': ['Lasagna sheets', 'Ground beef', 'Ricotta cheese', 'Mozzarella cheese', 'Tomato sauce', 'Onion', 'Garlic', 'Italian herbs'],
+  'pizza': ['Pizza dough', 'Tomato sauce', 'Mozzarella cheese', 'Olive oil', 'Basil', 'Oregano', 'Toppings of choice'],
+  'burger': ['Ground beef', 'Burger buns', 'Lettuce', 'Tomato', 'Onion', 'Cheese slices', 'Ketchup', 'Mustard', 'Pickles'],
+  'sandwich': ['Bread', 'Cheese', 'Ham/Turkey', 'Lettuce', 'Tomato', 'Mayonnaise', 'Mustard'],
+  'salad': ['Lettuce', 'Cucumber', 'Tomato', 'Bell pepper', 'Avocado', 'Olive oil', 'Vinegar', 'Salt', 'Pepper'],
+  'caesar salad': ['Romaine lettuce', 'Croutons', 'Parmesan cheese', 'Caesar dressing', 'Grilled chicken', 'Black pepper'],
+  'taco': ['Tortillas', 'Ground beef', 'Taco seasoning', 'Lettuce', 'Tomato', 'Cheese', 'Sour cream', 'Salsa'],
+  'burrito': ['Large tortillas', 'Rice', 'Black beans', 'Ground beef/chicken', 'Cheese', 'Salsa', 'Guacamole', 'Sour cream']
+};
+
+// Clothes category mock responses
+const clothesMockResponses: Record<string, string[]> = {
+  'shirt': ['Cotton T-Shirt', 'Button-Down Shirt', 'Polo Shirt', 'Henley Shirt', 'Oxford Shirt'],
+  't-shirt': ['Crew Neck T-Shirt', 'V-Neck T-Shirt', 'Graphic T-Shirt', 'Long Sleeve T-Shirt', 'Pocket T-Shirt'],
+  'jeans': ['Skinny Jeans', 'Straight Fit Jeans', 'Bootcut Jeans', 'Relaxed Fit Jeans', 'Distressed Jeans'],
+  'dress': ['Cocktail Dress', 'Maxi Dress', 'Summer Dress', 'Evening Gown', 'Shift Dress'],
+  'sweater': ['Crew Neck Sweater', 'V-Neck Sweater', 'Cardigan', 'Turtleneck Sweater', 'Quarter-Zip Pullover'],
+  'jacket': ['Bomber Jacket', 'Leather Jacket', 'Denim Jacket', 'Puffer Jacket', 'Blazer']
+};
+
+// Shoes category mock responses
+const shoesMockResponses: Record<string, string[]> = {
+  'sneakers': ['Running Sneakers', 'Casual Sneakers', 'High-Top Sneakers', 'Canvas Sneakers', 'Performance Sneakers'],
+  'boots': ['Ankle Boots', 'Combat Boots', 'Chelsea Boots', 'Winter Boots', 'Work Boots'],
+  'sandals': ['Flip Flops', 'Slide Sandals', 'Strappy Sandals', 'Platform Sandals', 'Sport Sandals'],
+  'heels': ['Stiletto Heels', 'Block Heels', 'Kitten Heels', 'Platform Heels', 'Wedge Heels'],
+  'loafers': ['Penny Loafers', 'Tassel Loafers', 'Driving Loafers', 'Bit Loafers', 'Boat Shoes']
+};
+
+// Mobiles category mock responses
+const mobilesMockResponses: Record<string, string[]> = {
+  'iphone': ['iPhone 13 Pro', 'iPhone 13', 'iPhone SE', 'iPhone 12 Pro', 'iPhone 12'],
+  'samsung': ['Samsung Galaxy S21', 'Samsung Galaxy Note 20', 'Samsung Galaxy A52', 'Samsung Galaxy Z Fold 3', 'Samsung Galaxy Z Flip 3'],
+  'android': ['Google Pixel 6 Pro', 'OnePlus 9', 'Xiaomi Mi 11', 'Sony Xperia 1 III', 'Motorola Edge'],
+  'accessories': ['Phone Case', 'Screen Protector', 'Wireless Charger', 'Power Bank', 'Phone Grip'],
+  'tablet': ['iPad Pro', 'Samsung Galaxy Tab S7', 'Amazon Fire HD', 'Microsoft Surface', 'Lenovo Tab P11']
+};
+
+// Software category mock responses
+const softwareMockResponses: Record<string, string[]> = {
+  'office': ['Microsoft 365', 'Google Workspace', 'LibreOffice', 'Apple iWork', 'WPS Office'],
+  'photo editing': ['Adobe Photoshop', 'GIMP', 'Affinity Photo', 'Capture One', 'Luminar AI'],
+  'video editing': ['Adobe Premiere Pro', 'Final Cut Pro', 'DaVinci Resolve', 'iMovie', 'Filmora'],
+  'games': ['Action Games', 'Strategy Games', 'Role-Playing Games', 'Simulation Games', 'Sports Games'],
+  'antivirus': ['Norton 360', 'McAfee Total Protection', 'Bitdefender', 'Kaspersky', 'Avast Premium']
 };
 
 // Convert ingredients to products
-export function convertIngredientsToProducts(ingredients: string[]): Product[] {
-  return ingredients.map((ingredient, index) => ({
-    id: `product-${index}`,
-    name: ingredient,
-    description: `Fresh ${ingredient.toLowerCase()} for your recipe.`,
-    price: 3.99 + (index * 0.5), // Just a simple formula to vary prices
-    imageUrl: `/placeholder.svg`, // Default placeholder, will be replaced
-    category: 'Ingredients',
-    isImageLoading: true
-  }));
+export function convertIngredientsToProducts(ingredients: string[], category?: string | null): Product[] {
+  return ingredients.map((ingredient, index) => {
+    let description = '';
+    let basePrice = 0;
+    
+    // Customize description and price based on category
+    switch(category) {
+      case 'clothes':
+        description = `Stylish ${ingredient.toLowerCase()} for your wardrobe.`;
+        basePrice = 19.99;
+        break;
+      case 'shoes':
+        description = `Comfortable ${ingredient.toLowerCase()} for everyday wear.`;
+        basePrice = 39.99;
+        break;
+      case 'mobiles':
+        description = `Feature-rich ${ingredient.toLowerCase()} with the latest technology.`;
+        basePrice = 299.99;
+        break;
+      case 'software':
+        description = `Powerful ${ingredient.toLowerCase()} for your digital needs.`;
+        basePrice = 49.99;
+        break;
+      default: // food category
+        description = `Fresh ${ingredient.toLowerCase()} for your recipe.`;
+        basePrice = 3.99;
+    }
+    
+    return {
+      id: `product-${index}`,
+      name: ingredient,
+      description: description,
+      price: basePrice + (index * 0.5), // Simple formula to vary prices
+      imageUrl: `/placeholder.svg`, // Default placeholder, will be replaced
+      category: category || 'Ingredients',
+      isImageLoading: true
+    };
+  });
 }
 
 // Fetch real images for ingredients
@@ -162,6 +211,27 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
   // For this demo, we'll simulate fetching images
   return new Promise((resolve) => {
     setTimeout(() => {
+      // Utility function to get a close match
+      const findBestMatch = (input: string, options: string[]): string | null => {
+        const lowerInput = input.toLowerCase();
+        // First try to find exact matches
+        for (const option of options) {
+          if (lowerInput.includes(option) || option.includes(lowerInput)) {
+            return option;
+          }
+        }
+        // Then try partial matches
+        for (const option of options) {
+          const words = option.split(' ');
+          for (const word of words) {
+            if (lowerInput.includes(word) && word.length > 3) { // Only match on significant words
+              return option;
+            }
+          }
+        }
+        return null;
+      };
+      
       // Enhanced image URL database with more specific ingredient images
       const mockImageUrls: Record<string, string> = {
         // Pasta and Italian ingredients
@@ -169,6 +239,32 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
         'spaghetti pasta': 'https://images.unsplash.com/photo-1627823202007-4e80a80006e3',
         'lasagna sheets': 'https://images.unsplash.com/photo-1633436375153-d7045cb93e46',
         'tomato sauce': 'https://images.unsplash.com/photo-1612119805122-2b33195bf338',
+        
+        // Vegetables and produce
+        'tomatoes': 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924',
+        'tomato': 'https://images.unsplash.com/photo-1606588260160-0c2992a7e7c7',
+        'garlic': 'https://images.unsplash.com/photo-1615477550927-6ec8445abaa6',
+        'onion': 'https://images.unsplash.com/photo-1587049633312-d628ae50a8ae',
+        'onions': 'https://images.unsplash.com/photo-1580201092675-a0a6a6cafbb1',
+        'lettuce': 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1',
+        'cucumber': 'https://images.unsplash.com/photo-1604977042946-1eecc30f269e',
+        'bell pepper': 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83',
+        'avocado': 'https://images.unsplash.com/photo-1632660668043-67a9b860ac8a',
+        'herbs': 'https://images.unsplash.com/photo-1620085229799-73082a0f4f50',
+        'cilantro': 'https://images.unsplash.com/photo-1599219114440-80c7944f1c2b',
+        'mint leaves': 'https://images.unsplash.com/photo-1628613779039-7a71f2467be8',
+        'basil': 'https://images.unsplash.com/photo-1600717535275-0b18ede2f7fc',
+        
+        // Other categories
+        'cotton t-shirt': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+        'polo shirt': 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99',
+        'skinny jeans': 'https://images.unsplash.com/photo-1542272604-787c3835535d',
+        'running sneakers': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
+        'boots': 'https://images.unsplash.com/photo-1608256246200-95e5b1e8e62c',
+        'iphone': 'https://images.unsplash.com/photo-1556656793-08538906a9f8',
+        'samsung': 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c',
+        'adobe photoshop': 'https://images.unsplash.com/photo-1560158218-69ae5166d439',
+        'microsoft 365': 'https://images.unsplash.com/photo-1650003747344-9920aeacac19',
         
         // Vegetables and produce
         'tomatoes': 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924',
@@ -284,7 +380,7 @@ async function fetchIngredientImage(ingredientName: string): Promise<string> {
       if (matchedIngredient) {
         resolve(mockImageUrls[matchedIngredient] + '?w=400&h=400&fit=crop');
       } else {
-        // Fallback to a random food image if no match
+        // Fallback to a random image if no match
         const randomImages = [
           'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=400&h=400&fit=crop',
           'https://images.unsplash.com/photo-1627485937980-936d240e5569?w=400&h=400&fit=crop',
