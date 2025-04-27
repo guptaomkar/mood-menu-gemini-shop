@@ -36,12 +36,30 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
         return 'Product Recommendations';
     }
   };
+  
+  // Get proper label for item type based on category
+  const getItemTypeLabel = (): string => {
+    switch (selectedCategory) {
+      case 'food':
+        return favoriteFood || 'Your Food';
+      case 'clothes':
+        return favoriteFood || 'Your Style';
+      case 'shoes':
+        return favoriteFood || 'Your Footwear';
+      case 'mobiles':
+        return favoriteFood || 'Your Device';
+      case 'software':
+        return favoriteFood || 'Your Software';
+      default:
+        return favoriteFood || 'Your Product';
+    }
+  };
 
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-medium">
-          {getCategoryTitle()} for {favoriteFood || 'Your Product'}
+          {getCategoryTitle()} for {getItemTypeLabel()}
         </h3>
         
         <Button 
