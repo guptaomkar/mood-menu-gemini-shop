@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    currentCategory?: string;
+  }
+}
+
 import { Product } from '@/types/chat';
 
 // Simulate API call to Gemini
@@ -185,7 +191,7 @@ export async function fetchImagesForIngredients(products: Product[]): Promise<Pr
   
   // Store current category in a global variable for the image fetcher to use
   if (products.length > 0) {
-    (window as any).currentCategory = products[0].category.toLowerCase();
+    window.currentCategory = products[0].category.toLowerCase();
   }
   
   // Process each product to get an image
